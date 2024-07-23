@@ -12,11 +12,11 @@ import numpy as np
 # plt.show()
 
 # # Export Composite 
-li.export_composite_file('full_composite', ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B9', 'B10', 'B11'])
+# li.export_composite_file('full_composite', ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B9', 'B10', 'B11'])
 
 # Create thumbnail
-fcc = li.create_fcc('B4', 'B3', 'B2')
-li.create_thumbnail(fcc, 500, 'thumbnail_true_color')
+# fcc = li.create_fcc('B4', 'B3', 'B2')
+# li.create_thumbnail(fcc, 500, 'thumbnail_true_color')
 
 # # Plot Histogram
 # band = li.read_band('B3')[li.read_band('B3') > 0]
@@ -74,16 +74,19 @@ li.create_thumbnail(fcc, 500, 'thumbnail_true_color')
 # green_band = li.read_band('B3')
 # blue_band = li.read_band('B2')
 
-# pan_sherpening = li.pan_sharpening(panchromatic_band, red_band, green_band, blue_band)
+
+# # Clip image
+# red_band = li.read_band('B4')
+
+# clipped_band = li.clip_image(red_band, (3000, 3000), (3500, 3500))
 
 # plt.figure(figsize=(12, 12))
-# plt.imshow(pan_sherpening)
-# plt.title('True Color Image Pan-Sharpened')
+# plt.imshow(clipped_band)
+# plt.title('Clipped red band')
 # plt.axis('off')
 # plt.show()
 
 
-# TODO: Clip image
 # TODO: Pan-Sharpening
 # TODO: PCA
 # TODO: Classifications (supervised non-supervised)

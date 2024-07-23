@@ -128,3 +128,7 @@ def pan_sharpening(pan_band, blue_band, green_band, red_band):
     pan_sharpened_image = np.dstack((red_sharpened, green_sharpened, blue_sharpened))
 
     return pan_sharpened_image
+
+def clip_image(band_data, ll_pixel, ur_pixel):
+    clipped_band = band_data[ll_pixel[1]:ur_pixel[1], ll_pixel[0]:ur_pixel[0]]
+    return clipped_band
