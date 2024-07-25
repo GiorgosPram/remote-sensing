@@ -96,4 +96,5 @@ import numpy as np
 # TODO: Filters
 # TODO: Vegetation Suppression
 # TODO: Spectral Signatures
+# TODO: Apply Masks
 
