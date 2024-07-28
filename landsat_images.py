@@ -7,15 +7,15 @@ import os
 folder_path = 'images'
 output_path = 'output'
 
-# Reads an image and returns its data
 def read_band(band):
+    # Reads an image (band) based on the suffix of the file and returns its data
 
     for filename in os.listdir(folder_path):
         file = os.path.join(folder_path, filename)
         
         # Checking if it is a TIF file
         if os.path.isfile(file):
-            if file.endswith(f'{band}.TIF'):
+            if file.endswith(f'{band}.TIF'): # Checking the suffix of the file
                 band_file = rasterio.open(file)
                 band_data = band_file.read(1).astype(np.float64)
                 band_file.close()
@@ -24,25 +24,31 @@ def read_band(band):
 
 
 def calculate_min_max(band, low=2, high=98):
+    # Calculates and returns the min & max cell value of a band after the no-data cells and the percetage clipping
+
     non_zero_band = band[band > 0]  # Exclude No-Data values
     band_min = np.nanpercentile(non_zero_band, low)
     band_max = np.nanpercentile(non_zero_band, high)
     return band_min, band_max
 
-# Function to normalize the band using the calculated min and max values
+
 def normalize_band(band):
-    min_val, max_val = calculate_min_max(band, 2, 98)
+    # Function to normalize the band using the calculated min and max values. Stretches the histogram on the min & max value
+    # and returns the values from 0-1 (reason is because matplotlib visualizes normalized values)
+
+    min_val, max_val = calculate_min_max(band, 2, 98) # Get the min & max
     band = np.clip(band, min_val, max_val)  # Clip values
     return (band - min_val) / (max_val - min_val)
 
 
 def create_fcc(red_color, green_color, blue_color):
+    # Combines the three input bands and returns them as a single false color composite image
 
     red_rescale = normalize_band(read_band(red_color))
     green_rescale = normalize_band(read_band(green_color))
     blue_rescale = normalize_band(read_band(blue_color))
 
-    # Create an alpha channel: 1 where data is present, 0 where no-data values (zeroes) are present
+    # Create an alpha channel: 1 where data is present, 0 where no-data values (zeroes) are present, in order to present no-data values as transparent
     alpha_channel = np.where((read_band(red_color) > 0) & (read_band(green_color) > 0) & (read_band(blue_color) > 0), 1, 0)
 
     # Stack the RGB bands
@@ -52,6 +58,7 @@ def create_fcc(red_color, green_color, blue_color):
 
 
 def export_composite_file(composite_name, bands):
+    # Saves the input bands in the drive as a composite GeoTIF file with metadata
 
     composite_data = []
     for band in bands:
@@ -75,13 +82,16 @@ def export_composite_file(composite_name, bands):
         output.write(composite_file)
 
 
-# Function to downsample the image by selecting every nth pixel
 def downsample_image(rgba_image, factor):
+    # Function to downsample the image by selecting every nth pixel
+
     return rgba_image[::factor, ::factor]
 
 
 def create_thumbnail(rgba_image, max_size_kb, thumbnail_name):
+    # Creates a thumbnail of a RGBA composite file, with lower size than the max_size_kb given
 
+    # Downsampling to reduce size and time of the computation
     downsampled_image = downsample_image(rgba_image, 5)
 
     rgba_downsampled_8bit = (downsampled_image * 255).astype(np.uint8)
@@ -89,6 +99,7 @@ def create_thumbnail(rgba_image, max_size_kb, thumbnail_name):
     pil_image = Image.fromarray(rgba_downsampled_8bit, mode='RGBA')
     quality = 100
 
+    # Iteration that saves the image, reads its size lowers its quality until the size is less than the max_size_kb
     while True:
         print(quality)
         buffer = io.BytesIO()
@@ -99,14 +110,23 @@ def create_thumbnail(rgba_image, max_size_kb, thumbnail_name):
             break
         quality -= 5
 
+        # Writes the image into a path
         with open(os.path.join(f'{output_path}/{thumbnail_name}.webp'), 'wb') as f:
             f.write(buffer.getvalue())
 
 
 def calculate_ndi(band_1, band_2):
-    np.seterr(invalid='ignore')
+    # Performs band math in order to calculate Normalized Differences Indexes (like NDVI), based on the input bands
+    np.seterr(invalid='ignore') # In case of a 0/0 operation
     ndi = (band_1 - band_2) / (band_1 + band_2)
     return ndi
+
+
+def clip_image(band_data, ll_pixel, ur_pixel):
+    # Clips a band based on a rectangle of a lower left pixel and upper right pixel
+    
+    clipped_band = band_data[ll_pixel[1]:ur_pixel[1], ll_pixel[0]:ur_pixel[0]]
+    return clipped_band
 
 
 def pan_sharpening(pan_band, blue_band, green_band, red_band):
@@ -129,6 +149,3 @@ def pan_sharpening(pan_band, blue_band, green_band, red_band):
 
     return pan_sharpened_image
 
-def clip_image(band_data, ll_pixel, ur_pixel):
-    clipped_band = band_data[ll_pixel[1]:ur_pixel[1], ll_pixel[0]:ur_pixel[0]]
-    return clipped_band

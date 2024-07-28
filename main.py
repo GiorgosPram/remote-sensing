@@ -2,23 +2,52 @@ import landsat_images as li
 import matplotlib.pyplot as plt
 import numpy as np
 
-# # Visualize FCC
-# fcc = li.create_fcc('B4', 'B3', 'B2')
 
-# plt.figure(figsize=(12, 12))
-# plt.imshow(fcc)
-# plt.title('True Color Image')
-# plt.axis('off')
-# plt.show()
+# NOTE: Uncomment the part of code needed to run the examples
 
-# # Export Composite 
-# li.export_composite_file('full_composite', ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B9', 'B10', 'B11'])
+# TODO: Pan-Sharpening (under-construction)
+# TODO: PCA
+# TODO: Classifications (supervised non-supervised)
+# TODO: Download with API
+# TODO: INSERT INTO postgreSQL db
+# TODO: Reproject image with proj4
+# TODO: 5x5, 9x9 Filters
+# TODO: Vegetation Suppression
+# TODO: Spectral Signatures
+# TODO: Apply Masks
+# TODO: Unit-Testing
 
+# TODO: SENTINEL-2
+
+# ------------------------------------------------------------------------
+# Visualize FCC
+# ------------------------------------------------------------------------
+
+fcc = li.create_fcc('B4', 'B3', 'B2')
+
+plt.figure(figsize=(12, 12))
+plt.imshow(fcc)
+plt.title('True Color Image')
+plt.axis('off')
+plt.show()
+
+# ------------------------------------------------------------------------
+# Export Composite 
+# ------------------------------------------------------------------------
+
+# li.export_composite_file('full_composite_123', ['B1', 'B2', 'B3'])
+
+# ------------------------------------------------------------------------
 # Create thumbnail
+# ------------------------------------------------------------------------
+
 # fcc = li.create_fcc('B4', 'B3', 'B2')
 # li.create_thumbnail(fcc, 500, 'thumbnail_true_color')
 
-# # Plot Histogram
+# ------------------------------------------------------------------------
+# Plot Histogram
+# ------------------------------------------------------------------------
+
 # band = li.read_band('B3')[li.read_band('B3') > 0]
 
 # plt.figure(figsize=(10, 6))
@@ -28,7 +57,10 @@ import numpy as np
 # plt.ylabel('Frequency')
 # plt.show()
 
-# # Plot Histogram (Normalized - Rescaled)
+# ------------------------------------------------------------------------
+# Plot Histogram (Normalized - Rescaled)
+# ------------------------------------------------------------------------
+
 # normalized_band = li.normalize_band(li.read_band('B3')[li.read_band('B3') > 0]) * 255
 
 # plt.figure(figsize=(10, 6))
@@ -38,7 +70,10 @@ import numpy as np
 # plt.ylabel('Frequency')
 # plt.show()
 
-# # Plot histogram for the true color composite
+# ------------------------------------------------------------------------
+# Plot histogram for the true color composite
+# ------------------------------------------------------------------------
+
 # fcc = li.create_fcc('B4', 'B3', 'B2')
 
 # plt.figure(figsize=(10, 6))
@@ -55,7 +90,10 @@ import numpy as np
 # plt.legend()
 # plt.show()
 
-# # Visualize NDVI
+# ------------------------------------------------------------------------
+# Visualize NDVI
+# ------------------------------------------------------------------------
+
 # nir_band = np.where(li.read_band('B5') == 0, np.NAN, li.read_band('B5'))
 # red_band = np.where(li.read_band('B4') == 0, np.NAN, li.read_band('B4'))
 # ndvi = np.clip(li.calculate_ndi(nir_band, red_band), -1, 1)
@@ -68,14 +106,10 @@ import numpy as np
 # plt.axis('off')
 # plt.show()
 
-# # Pan-Sharpening
-# panchromatic_band = li.read_band('B8')
-# red_band = li.read_band('B4')
-# green_band = li.read_band('B3')
-# blue_band = li.read_band('B2')
+# ------------------------------------------------------------------------
+# Clip image
+# ------------------------------------------------------------------------
 
-
-# # Clip image
 # red_band = li.read_band('B4')
 
 # clipped_band = li.clip_image(red_band, (3000, 3000), (3500, 3500))
@@ -86,15 +120,13 @@ import numpy as np
 # plt.axis('off')
 # plt.show()
 
+# ------------------------------------------------------------------------
+# Pan-Sharpening (NOTE: under-construction)
+# ------------------------------------------------------------------------
 
-# TODO: Pan-Sharpening
-# TODO: PCA
-# TODO: Classifications (supervised non-supervised)
-# TODO: Download with API
-# TODO: INSERT INTO postgreSQL db
-# TODO: Reproject image with proj4
-# TODO: Filters
-# TODO: Vegetation Suppression
-# TODO: Spectral Signatures
-# TODO: Apply Masks
+# panchromatic_band = li.read_band('B8')
+# red_band = li.read_band('B4')
+# green_band = li.read_band('B3')
+# blue_band = li.read_band('B2')
+
 
