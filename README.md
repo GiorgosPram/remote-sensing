@@ -4,7 +4,7 @@ This repository contains python code for Landsat 9 satellite images, in order to
 
 ## Running
 
-`main.py` contains the examples to run, uncomment each code block to run the example.
+`main.py` contains the examples to run, uncomment each code block to run the example. Add the Level 1 Landasat 9 bands in the `/images` folder.
 
 ## TODO List
 
