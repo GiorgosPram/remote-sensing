@@ -4,7 +4,7 @@ This repository contains python code for Landsat 9 satellite images, in order to
 
 ## Running
 
-`main.py` contains the examples to run. 
+`main.py` contains the examples to run, uncomment each code block to run the example.
 
 ## TODO List
 
